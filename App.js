@@ -15,7 +15,7 @@ import store from './src/source';
 export default function App() {
   return (
     <Provider store={store}>
-      <StatusBar backgroundColor={'black'} barStyle="light-content" />
+      <StatusBar backgroundColor={'#2f56bf'} barStyle="light-content" />
       <AppStack />
     </Provider>
   );
