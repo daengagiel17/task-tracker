@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useState, useEffect} from 'react';
 import {
   Text,
   View,
@@ -7,12 +7,33 @@ import {
   StyleSheet,
   ScrollView,
 } from 'react-native';
+import ModalTask from '../components/ModalTask.component';
+import OnTask from '../components/OnTask.component';
+import Task from '../components/Task.component';
+import {GET_TASK} from '../redux/action/task_types';
+import {setTimeAction} from '../redux/action/task';
+import {connect} from 'react-redux';
 
 const window = Dimensions.get('window');
 
-export default function HomeScreen() {
+function HomeScreen(props) {
+  const [isRun, setIsRun] = useState(false);
+  const [task, setTask] = useState({});
+  const [selectTask, setSelectTask] = useState(null);
+  const [visibleModal, setVisibleModal] = useState(false);
+  const [timeStart, setTimeStart] = useState(null);
+
+  useEffect(() => {
+    props.getTask();
+  }, []);
+
   return (
     <View style={styles.container}>
+      <ModalTask
+        task={task}
+        visibleModal={visibleModal}
+        setVisibleModal={setVisibleModal}
+      />
       <View style={styles.header}>
         <View style={styles.profile}>
           <Image
@@ -27,56 +48,39 @@ export default function HomeScreen() {
           <Text style={styles.titleHeadList}>Your Task</Text>
         </View>
         <View style={styles.bodyList}>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task A</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task B</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task C</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task D</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task E</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task F</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task G</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task H</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
-          <View style={styles.contentList}>
-            <Text style={styles.titleTask}>Task I</Text>
-            <Text style={styles.buttonStart}>Start</Text>
-          </View>
+          {props.listTask.map((item, index) => (
+            <Task
+              key={index}
+              task={item}
+              setTask={setTask}
+              setVisibleModal={setVisibleModal}
+              setSelectTask={setSelectTask}
+              setIsRun={setIsRun}
+              isRun={item.id == selectTask}
+              setTimeTask={props.setTimeTask}
+              setTimeStart={setTimeStart}
+              timeStart={timeStart}
+            />
+          ))}
         </View>
       </ScrollView>
-      <View style={styles.onTask}>
-        <Text>On Task</Text>
-      </View>
+      <OnTask
+        isRun={isRun}
+        setIsRun={setIsRun}
+        setSelectTask={setSelectTask}
+        task={task}
+        setTimeTask={props.setTimeTask}
+        setTimeStart={setTimeStart}
+        timeStart={timeStart}
+      />
     </View>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
+    justifyContent: 'flex-end',
     backgroundColor: '#fff',
-    width: window.width,
-    height: window.height,
   },
   header: {
     flexDirection: 'row',
@@ -128,25 +132,15 @@ const styles = StyleSheet.create({
   bodyList: {
     // paddingHorizontal: 20,
   },
-  contentList: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    width: window.width - 40,
-    padding: 20,
-    marginHorizontal: 20,
-    marginVertical: 7,
-    backgroundColor: '#fff',
-    borderRadius: 15,
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.25,
-    shadowRadius: 3.84,
-    elevation: 5,
-  },
-  onTask: {
-    backgroundColor: 'red',
-  },
 });
+
+const mapStateToProps = (state) => ({
+  listTask: state.task.listTask,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  getTask: () => dispatch({type: GET_TASK}),
+  setTimeTask: (data) => dispatch(setTimeAction(data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(HomeScreen);

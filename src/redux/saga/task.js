@@ -4,39 +4,25 @@ import {
   GET_TASK,
   GET_TASK_SUCCESS,
   GET_TASK_FAILED,
+  SET_TIME,
+  SET_TIME_SUCCESS,
+  SET_TIME_FAILED,
 } from '../action/task_types';
 import {apiGetTask} from '../../common/api/task';
+import {apiSetTime} from '../../common/api/task';
 
 function* getTask(action) {
   try {
     // LOGIN
-    console.info('Task saga :', action);
-    const resTask = yield apiGetTask();
-    console.log('data resTask : ', resTask.data);
-
-    if (resTask && resTask.data) {
-      // save token to local storage
-      yield put({type: GET_TASK_SUCCESS});
-
-      ToastAndroid.showWithGravity(
-        'Wellcome ' + resTask.data.fullName,
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-      );
-    } else {
-      // show alert
-      ToastAndroid.showWithGravity(
-        'Task gagal',
-        ToastAndroid.SHORT,
-        ToastAndroid.BOTTOM,
-      );
-      yield put({type: GET_TASK_FAILED});
-    }
+    console.info('resGetTask saga :', action);
+    const resGetTask = yield apiGetTask();
+    console.log('data resGetTask : ', resGetTask.data.data);
+    yield put({type: GET_TASK_SUCCESS, payload: resGetTask.data.data});
   } catch (e) {
     console.info('e', e);
     // show alert
     ToastAndroid.showWithGravity(
-      'Gagal Task',
+      'Failed Get Task',
       ToastAndroid.SHORT,
       ToastAndroid.BOTTOM,
     );
@@ -44,9 +30,30 @@ function* getTask(action) {
   }
 }
 
+function* setTime(action) {
+  try {
+    // LOGIN
+    console.info('setTime saga :', action);
+    const resSetTime = yield apiSetTime(action.payload);
+    console.log('data resSetTime : ', resSetTime.data);
+    yield put({type: SET_TIME_SUCCESS});
+    yield put({type: GET_TASK});
+  } catch (e) {
+    console.info('e', e);
+    // show alert
+    ToastAndroid.showWithGravity(
+      'Failed Set Time',
+      ToastAndroid.SHORT,
+      ToastAndroid.BOTTOM,
+    );
+    yield put({type: SET_TIME_FAILED});
+  }
+}
+
 function* taskSaga() {
   console.info('taskSaga()');
   yield takeLatest(GET_TASK, getTask);
+  yield takeLatest(SET_TIME, setTime);
 }
 
 export default taskSaga;

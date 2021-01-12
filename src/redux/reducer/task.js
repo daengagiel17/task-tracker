@@ -1,68 +1,58 @@
 import {
-  LOGIN,
-  LOGIN_SUCCESS,
-  LOGIN_FAILED,
-  REGISTER,
-  REGISTER_SUCCESS,
-  REGISTER_FAILED,
-  LOGOUT,
+  GET_TASK,
+  GET_TASK_SUCCESS,
+  GET_TASK_FAILED,
+  SET_TIME,
+  SET_TIME_SUCCESS,
+  SET_TIME_FAILED,
 } from '../action/task_types';
 const initialState = {
   isLoading: false,
-  isLoggedIn: false,
+  listTask: [],
 };
 
 const task = (state = initialState, action) => {
   switch (action.type) {
-    case LOGIN: {
-      console.info('reducer login');
+    case GET_TASK: {
+      console.info('reducer GET_TASK');
       return {
         ...state,
         isLoading: true,
       };
     }
-    case LOGIN_SUCCESS: {
-      console.info('reducer login_success');
+    case GET_TASK_SUCCESS: {
+      console.info('reducer GET_TASK_SUCCESS');
       return {
         ...state,
-        isLoggedIn: true,
+        listTask: action.payload,
         isLoading: false,
       };
     }
-    case LOGIN_FAILED: {
-      console.info('reducer login_failed');
+    case GET_TASK_FAILED: {
+      console.info('reducer GET_TASK_failed');
       return {
         ...state,
         isLoading: false,
       };
     }
-    case REGISTER: {
-      console.info('reducer register');
+    case SET_TIME: {
+      console.info('reducer SET_TIME');
       return {
         ...state,
         isLoading: true,
       };
     }
-    case REGISTER_SUCCESS: {
-      console.info('reducer register_success');
-      return {
-        ...state,
-        isLoggedIn: true,
-        isLoading: false,
-      };
-    }
-    case REGISTER_FAILED: {
-      console.info('reducer register_failed');
+    case SET_TIME_SUCCESS: {
+      console.info('reducer SET_TIME_success');
       return {
         ...state,
         isLoading: false,
       };
     }
-    case LOGOUT: {
-      console.info('reducer logout');
+    case SET_TIME_FAILED: {
+      console.info('reducer SET_TIME_failed');
       return {
         ...state,
-        isLoggedIn: false,
         isLoading: false,
       };
     }
