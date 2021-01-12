@@ -1,9 +1,9 @@
 ## Pre Install
 
-- Install [Backend Task Tracker](https://github.com/daengagiel17) in your local computer
-- Have a emulator from android studio
+- Install [Backend Task Tracker](https://github.com/daengagiel17/task-tracker-backend) in your local computer
+- Have an emulator from android studio
 - Install npm
-- Be sure you have run this command so emolator can connect to localhost
+- Be sure you have run this command so emulator can connect to localhost:5000
 ```sh
 $ adb reverse tcp:5000 tcp:5000
 ```
@@ -35,11 +35,11 @@ $ npm run android
 - Does not save old tracker if user press play button directly from task list while another tracker is running
 
 ## Plan 
-- Autentiction and Profile
+- Autentication and Profile
 - Adding a description to each tracker isn't just a job description
 
 ## Component 
 - Redux to manage state
 - Redux saga to allow Redux connect an api
-- Stopwatch for tracker time
+- Stopwatch React Native for tracker time
 - Navigation, preparation for further development which allows navigate many screens
