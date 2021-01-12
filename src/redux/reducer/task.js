@@ -2,6 +2,9 @@ import {
   GET_TASK,
   GET_TASK_SUCCESS,
   GET_TASK_FAILED,
+  UPDATE_TASK,
+  UPDATE_TASK_SUCCESS,
+  UPDATE_TASK_FAILED,
   SET_TIME,
   SET_TIME_SUCCESS,
   SET_TIME_FAILED,
@@ -30,6 +33,27 @@ const task = (state = initialState, action) => {
     }
     case GET_TASK_FAILED: {
       console.info('reducer GET_TASK_failed');
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
+    case UPDATE_TASK: {
+      console.info('reducer UPDATE_TASK');
+      return {
+        ...state,
+        isLoading: true,
+      };
+    }
+    case UPDATE_TASK_SUCCESS: {
+      console.info('reducer UPDATE_TASK_SUCCESS');
+      return {
+        ...state,
+        isLoading: false,
+      };
+    }
+    case UPDATE_TASK_FAILED: {
+      console.info('reducer UPDATE_TASK_failed');
       return {
         ...state,
         isLoading: false,

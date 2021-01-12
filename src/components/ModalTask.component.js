@@ -8,14 +8,15 @@ import {
   Dimensions,
   TextInput,
   ScrollView,
-  Alert,
 } from 'react-native';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import moment from 'moment';
+import {connect} from 'react-redux';
+import {updateTaskAction} from '../redux/action/task';
 
 const window = Dimensions.get('window');
 
-export default function ModalTask(props) {
+function ModalTask(props) {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
 
@@ -24,7 +25,14 @@ export default function ModalTask(props) {
     setDescription(props.task.description);
   }, [props.task]);
 
-  function submit() {}
+  function submit() {
+    if (props.task.description != description) {
+      props.setVisibleModal(false);
+      props.updateTask(props.task.id, {
+        description: description,
+      });
+    }
+  }
 
   return (
     <Modal
@@ -36,7 +44,7 @@ export default function ModalTask(props) {
         <View style={styles.modalView}>
           <View style={styles.title}>
             <Text style={styles.textTitle}>{title}</Text>
-            <TouchableOpacity onPress={() => props.setVisibleModal(false)}>
+            <TouchableOpacity onPress={() => submit()}>
               <Icon name="check" size={25} color={'#000'} />
             </TouchableOpacity>
           </View>
@@ -136,3 +144,13 @@ const styles = StyleSheet.create({
     color: '#666',
   },
 });
+
+const mapStateToProps = (state) => ({
+  listTask: state.task.listTask,
+});
+
+const mapDispatchToProps = (dispatch) => ({
+  updateTask: (id, data) => dispatch(updateTaskAction(id, data)),
+});
+
+export default connect(mapStateToProps, mapDispatchToProps)(ModalTask);
